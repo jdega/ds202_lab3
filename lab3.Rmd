@@ -1,0 +1,98 @@
+---
+title: "Lab 3"
+author: "Jonathan DeGardner"
+date: "9/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+#install.packages('readxl')
+dat <- readxl::read_xls("C:\\Users\\Jonny DeGardner\\Desktop\\Cawlige\\S.S1\\DS 202\\ds202_lab3\\extract1.tar\\extract1\\GSS.xls")
+str(dat)
+```
+
+## Question 1
+```{r}
+library(dplyr)
+pol_affil <- select(dat, 'Political party affiliation')
+edu <- as.numeric(dat$`Highest year of school completed`)
+
+ind1 <- filter(dat, pol_affil == 'Independent')
+ind2 <- filter(dat, pol_affil == 'Ind,near dem')
+ind3 <- filter(dat, pol_affil == 'Ind,near rep')
+ind <- c(ind1, ind2, ind3)
+
+dem1 <- filter(dat, pol_affil == 'Strong democrat')
+dem2 <- filter(dat, pol_affil == 'Not str democrat')
+dem <- c(dem1, dem2)
+
+rep1 <- filter(dat, pol_affil == 'Strong republican')
+rep2 <- filter(dat, pol_affil == 'Not str republication')
+rep <- c(rep1, rep2)
+
+#mean(ind$`Highest year of school completed`)
+#mean(dem$`Highest year of school completed`)
+#mean(rep$`Highest year of school completed`)
+```
+
+I am not sure what I am doing wrong here, but I could not get an output.
+
+
+## Question 2
+
+Since I could not get an output from the previous question, I did not code this one, but I will run you through my thought process in case it can award me any type of partial credit.
+For the 3 sections of political affiliation I would first find the median for each affiliation. After that I would take just the values that are greater than the median for that specific affiliation. Once that is complete, I would add the outputs for each affiliation into a new data frame and print the structure of that data frame.
+
+
+## Question 3
+```{r}
+library(ggplot2)
+a <- ggplot(dat, aes(x=`Marital status`, ..count..)) + geom_bar(aes(fill=`General happiness`), position='dodge')
+a + theme(axis.text.x = element_text(size=10, angle=90))
+```
+
+Based on the visual, the happiest people (based on very happy and pretty happy) are either married or never married. Following those, the next happiest people are divorced, then widowed, and then separated.
+
+
+## Question 4
+```{r}
+library(ggplot2)
+b <- ggplot(dat, aes(x=`General happiness`, ..count..)) + geom_bar(aes(fill=`Political party affiliation`), position='dodge') + geom_bar(aes(fill=`Marital status`), position='dodge')
+b + theme(axis.text.x = element_text(size=10, angle=90)) + scale_color_gradient2(midpoint=mid, low='blue', mid='white', high='red', space='Lab')
+```
+
+Based on the visual, party affiliation does not affect the relationship between happiness and marital status. The happiness count is the same as the previous visual.
+
+
+## Question 5
+```{r}
+library(ggplot2)
+#sort(dat$`Highest year of school completed`)
+ggplot(dat, aes(x=`Marital status`, y=`Highest year of school completed`)) + geom_bar(stat='identity', width=.5, fill='tomato2') + theme(axis.text.x = element_text(size=10, angle=90))
+```
+
+Based on the visual, people who are married have a better education by a lot. Coming in second is never married and then divorced, widowed, and separated. I believe this is the case because many people find their significant other in college or other post-secondary education programs. I believe that never married comes in second because some people who get a degree after high school may work for hours and hours on end and may not have enough time to date or get married.
+
+
+## Question 6
+##### Does year affect happiness? How does happiness change over the years?
+```{r}
+library(ggplot2)
+z <- ggplot(dat, aes(x=`Gss year for this respondent`, ..count..)) + geom_bar(aes(fill=`General happiness`), position='dodge')
+z + theme(axis.text.x = element_text(size=10, angle=90)) + scale_color_gradient2(midpoint=mid, low='blue', mid='white', high='red', space='Lab')
+```
+
+Based on the visual, all of the happiness attributes are somewhat similar in all of the years in the data set. The only attribute that changes significantly is 'Pretty happy', which increases around 1994 and on average stays higher until 2020 (present).
+
+
+##### Does education affect the number of hours one usually works a week?
+```{r}
+library(ggplot2)
+y <- ggplot(dat, aes(x=`Highest year of school completed`, y=`Number of hours usually work a week`)) + geom_bar(stat='identity', width=.6, fill='tomato3')
+y + theme(axis.text.x = element_text(size=10, angle=90))
+```
+
+Based on the visual, it seems that those who have a high school degree (12) work the greatest amount of hours a week, and those who pursue a college degree (16) work the second most hours a week. This may be because those who have a college degree receive higher wages and salaries compared to those who do not. Those who do not have a college degree and only have a high school degree are required to work longer hours in order to make the same amount of money as someone with a college degree.
